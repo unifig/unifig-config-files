@@ -1,0 +1,91 @@
+# info.version: 0.0.1
+
+spring:
+  application:
+    name: ratel-zuul
+  http:
+    multipart:
+      max-file-size: 80Mb
+      max-request-size: 80Mb
+  zipkin:
+    base-url: http://127.0.0.1:10030
+
+
+# server:
+#   port: 10020
+
+# https:
+#   port: 8443 
+#   ssl:
+#     key-store: www.unifiginfo.com.jks
+#     key-password: unifiginfo
+#     key-store-password: changeit
+#     clientAuth: false
+#     sslProtocol: TLS
+#   file: /usr/local/etc/www.unifiginfo.com.jks
+
+ #https端口号.  
+server.port: 10020  
+    #证书的路径.  
+# server.ssl.key-store: classpath:www.unifiginfo.com.jks
+    #证书密码，请修改为您自己证书的密码.  
+# server.ssl.key-store-password: unifiginfo
+#     #秘钥库类型  
+# server.ssl.keyStoreType: JKS  
+#     #证书别名  
+# server.ssl.keyAlias: tomcat 
+
+
+spring.servlet.multipart.maxHttpHeaderSize: 8192
+
+logging.config: classpath:log/logback-dev.xml
+
+# 上传文件零时目录
+server.tomcat.basedir: ./springboot-tomcat-tmp
+
+eureka.client.service-url.defaultZone: http://admin:123456@127.0.0.1:10001/eureka/
+eureka.instance.instance-id: ${spring.cloud.client.ipAddress}:${server.port}
+eureka.instance.prefer-ip-address: true
+
+#需要忽略的头部信息，不在传播到其他服务
+zuul.sensitive-headers: Access-Control-Allow-Origin
+zuul.ignored-headers: Access-Control-Allow-Origin,H-APP-Id,Token,APPToken
+
+
+# 是否开启重试功能
+zuul.retryable: true
+# 对当前服务的重试次数
+ribbon.MaxAutoRetries: 2
+# 切换相同Server的次数
+ribbon.MaxAutoRetriesNextServer: 1
+
+# spring.data.mongodb.uri: '{cipher}AQARbsIy4Lz1viAYszkaXIgQVBsX0hvASn1DddcdKUfwNGnSSESDK6C1tRcZely18huF8pkenlocZWPo9/4cagAbIQXtZ2CN4pGc8iQAsU6Wnv4S61bf/aCU+HODZx8sWHAczVorW0jZ/kzCXibWcCslp74mZG74f8c8PVoknFRNU3+PpDkS6ImBqxfTtUaV1/gau1+grFaPBmdcc1LGlRJok9SJ3gLGg2brywAhlGfnMCnKo9JwDKFa+Ig6KGqpCoXjXdCsYYklu4Ga/6OOEdiDlak6zuscp0cVDj3rzYcr7wu8cMKMUXK5pGjYNdVBq5qPy9dFLzBFwghg42VsOeocXlytOLfKxI7Aj578F/fcsduMhHSLdTGSn03cdZlvdzn7a56MlZGQXre+vBQBlyk03nvR2Y54JrXYOi30WYRP3sTv1D5b40+VylPjqJYVpLsC2/EX78qmoLVHmOgm9U0a0bhcfb0qiiZev4CHWJB3Ag=='
+# spring.data.mongodb.database: jusha_gateway
+
+
+
+zuul.host.socket-timeout-millis: 60000
+zuul.host.connect-timeout-millis: 60000
+ribbon.ReadTimeout: 100000
+ribbon.ConnectTimeout: 100000
+hystrix.command.default.execution.timeout.enabled: false
+hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 1200000
+
+## 单个token 请求最大30
+#spap.token.request.single.max: 30
+## 非token 单个接口的并发限流
+#spap.api.request.single.max: 10000
+
+# test
+test.secret: '{cipher}AQB92GOGFnLlOOjkUzXIh+3y52FVhbfWRgnAlnrgb4DoisMZ4PgF5mmyGOaZpPEb3WG+t1G8XMa8drM7OQCQtVCPMhJVpwc2lT0/lelNU2CSC/EvNpOpo9OhH6cGexc0s5uXwXHwTkZqYC/yU2dSRqflW4fPVcR8wCOtBao/qQLgrqt/YFXuP3SiQpREI5YN2dJdnMlUFVOyoXuuHrq6UYS97TOFdKGZV0vopf7goyM9oXW51jBaTC06KltIA+yW2q/vD5OICaV/Musrydd/WdCFAaByHmcLtBAsfC6f7ibPVeh42q83+8ykDk9zXK0OazOiB5zlEnnbn/8Ema37z/rEMkftEP+0dpjIn6b5JrF0+8s1Q/vhiJsoCFMYW1hJtwE='
+
+
+zuul.ignored-services: '*'
+zuul:
+  routes:
+    ratel-mall-route:
+      service-id: ratel-mall
+      path: /rm/**
+    ratel-organ-route:
+      service-id: ratel-organ
+      path: /ro/**
